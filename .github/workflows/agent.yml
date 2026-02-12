@@ -1,0 +1,49 @@
+name: Autonomous Literary Agent 24/7 Operation
+
+on:
+    schedule:
+        - cron: "0 */6 * * *"
+    workflow_dispatch:
+
+env:
+    PYTHON_VERSION: "3.11"
+
+jobs:
+    run-agent:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+                  cache: "pip"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+
+            - name: Create directories
+              run: mkdir -p memory logs library_data submission_data config
+
+            - name: Run agent tasks
+              env:
+                  GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+                  GROQ_API_KEY_1: ${{ secrets.GROQ_API_KEY_1 }}
+              run: |
+                  python main.py &
+                  sleep 300
+                  echo "Agent cycle completed"
+
+            - name: Upload artifacts
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: agent-logs
+                  path: logs/
+                  retention-days: 7

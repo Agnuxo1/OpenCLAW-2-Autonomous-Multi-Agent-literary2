@@ -1,0 +1,21 @@
+# Render.yaml - Deploy Autonomous Literary Agent on Render
+# Free tier: 750 hours/month, 512MB RAM, 0.1 CPU
+
+services:
+  - type: web
+    name: literary-agent
+    runtime: python
+    region: frankfurt
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: GEMINI_API_KEY_1
+        sync: false
+      - key: GROQ_API_KEY_1
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true

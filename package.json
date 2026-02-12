@@ -1,0 +1,44 @@
+{
+  "name": "autonomous-literary-agent",
+  "version": "1.0.0",
+  "description": "The World's Most Advanced AI Literary Agent - 24/7 Autonomous Marketing, Submissions, and Promotion",
+  "main": "main.py",
+  "scripts": {
+    "start": "python main.py",
+    "dev": "python -c \"from dotenv import load_dotenv; load_dotenv(); exec(open('main.py').read())\"",
+    "test": "pytest tests/ -v",
+    "lint": "flake8 . && black --check .",
+    "format": "black .",
+    "typecheck": "mypy .",
+    "install-deps": "pip install -r requirements.txt",
+    "docker-build": "docker build -t literary-agent .",
+    "docker-run": "docker run -d --name literary-agent literary-agent"
+  },
+  "keywords": [
+    "literary-agent",
+    "ai",
+    "autonomous",
+    "book-marketing",
+    "social-media",
+    "openclaw",
+    "author-promotion"
+  ],
+  "author": "Francisco Angulo de Lafuente",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Agnuxo1/OpenCLAW-2-Autonomous-Multi-Agent-literary2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Agnuxo1/OpenCLAW-2-Autonomous-Multi-Agent-literary2/issues"
+  },
+  "homepage": "https://www.franciscoangulo.com",
+  "engines": {
+    "python": ">=3.10"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "python": {
+    "requirements": "requirements.txt"
+  }
+}

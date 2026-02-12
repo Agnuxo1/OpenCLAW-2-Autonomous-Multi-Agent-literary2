@@ -1,0 +1,337 @@
+{
+  "author": {
+    "name": "Francisco Angulo de Lafuente",
+    "birth_year": 1976,
+    "birthplace": "Madrid, España",
+    "email": "contact@franciscoangulo.com",
+    "website": "https://www.franciscoangulo.com",
+    "bio_short": "Spanish author with 55+ works in 6 languages. Science fiction, thrillers, children's literature.",
+    "bio_full": "Francisco Angulo de Lafuente (Madrid, 1976) is a versatile Spanish author whose works span from science fiction and spy thrillers to illustrated children's literature and writing guides. A fan of fantasy cinema and literature, he follows Isaac Asimov and Stephen King. He began his literary career at 17 with a book of short stories and has since published over 55 works in Spanish, English, French, Italian, Portuguese, and Japanese.",
+    "influences": ["Isaac Asimov", "Stephen King"],
+    "social_media": {
+      "twitter": "@FranciscoAngulo",
+      "instagram": "@franciscoangulo.author",
+      "facebook": "franciscoangulodelafuente",
+      "goodreads": "https://www.goodreads.com/author/show/7283455.Francisco_Angulo_de_Lafuente",
+      "amazon": "https://www.amazon.com/stores/author/B0086LDX3G"
+    }
+  },
+  "catalog": {
+    "total_books": 55,
+    "primary_languages": ["ES", "EN"],
+    "all_languages": ["ES", "EN", "FR", "IT", "PT", "JP"],
+    "formats": ["ebook", "paperback", "hardcover", "audiobook"],
+    "categories": {
+      "science_fiction": 12,
+      "thriller": 8,
+      "children": 6,
+      "non_fiction": 5,
+      "historical": 4,
+      "other": 20
+    }
+  },
+  "novels": [
+    {
+      "id": "apocalypsai",
+      "title": "ApocalypsAI: The Day After AGI",
+      "title_es": "ApocalypsIA: El día después de la AGI",
+      "year": 2024,
+      "genre": "Science Fiction",
+      "language": ["EN", "ES"],
+      "word_count": 85000,
+      "asin": "B0CLQ2RJP3",
+      "isbn": "",
+      "platforms": ["Amazon", "Apple Books"],
+      "ku_eligible": true,
+      "price_usd": 4.99,
+      "rating": 4.5,
+      "reviews": 12,
+      "hook_en": "What if the AI we created decides WE are the problem?",
+      "hook_es": "¿Y si la IA que creamos decide que somos el problema?",
+      "keywords": ["AI", "AGI", "science fiction", "dystopia", "artificial intelligence", "apocalypse"],
+      "target_audience": "Adult sci-fi readers, AI enthusiasts"
+    },
+    {
+      "id": "valentina_smirnova",
+      "title": "Commander Valentina Smirnova",
+      "title_es": "Comandante Valentina Smirnova",
+      "year": 2023,
+      "genre": "Spy Thriller",
+      "language": ["EN", "ES", "FR", "IT", "PT"],
+      "word_count": 95000,
+      "asin": "B0086LDX3G",
+      "platforms": ["Amazon", "Apple Books", "Kobo"],
+      "ku_eligible": true,
+      "price_usd": 5.99,
+      "hook_en": "A Russian spy. An impossible mission. No way out.",
+      "hook_es": "Una espía rusa, una misión imposible, ninguna salida.",
+      "keywords": ["spy thriller", "espionage", "russian spy", "action", "suspense"],
+      "target_audience": "Thriller fans, spy novel readers"
+    },
+    {
+      "id": "things_writer",
+      "title": "Things you shouldn't do if you want to be a writer",
+      "title_es": "Cosas que no debes hacer si quieres ser escritor",
+      "year": 2014,
+      "genre": "Writing Guide",
+      "language": ["EN", "ES"],
+      "word_count": 45000,
+      "asin": "B00PIPTRI8",
+      "platforms": ["Amazon"],
+      "ku_eligible": true,
+      "price_usd": 2.99,
+      "rating": 3.1,
+      "reviews": 58,
+      "hook_en": "The mistakes every writer makes (and how to avoid them)",
+      "hook_es": "Los errores que todo escritor comete (y cómo evitarlos)",
+      "keywords": ["writing", "author", "writing tips", "how to write", "creative writing"],
+      "target_audience": "Aspiring writers, creative writing students"
+    },
+    {
+      "id": "mutant_jellyfish",
+      "title": "The Mutant Jellyfish Invasion",
+      "title_es": "La Invasión de las Medusas Mutantes",
+      "year": 2024,
+      "genre": "Children's Adventure",
+      "language": ["EN", "ES"],
+      "word_count": 25000,
+      "asin": "B0CL2YJMH6",
+      "platforms": ["Amazon", "Apple Books"],
+      "ku_eligible": true,
+      "price_usd": 3.99,
+      "rating": 5.0,
+      "reviews": 2,
+      "hook_en": "The jellyfish have mutated and only the brave can save the ocean!",
+      "hook_es": "¡Las medusas han mutado y solo unos valientes pueden salvar el océano!",
+      "keywords": ["children books", "adventure", "kids", "ocean", "illustrated"],
+      "target_audience": "Kids 8-12, Parents, Teachers"
+    },
+    {
+      "id": "obituarist",
+      "title": "The Obituarist",
+      "title_es": "El biógrafo de difuntos",
+      "year": 2025,
+      "genre": "Gothic Thriller",
+      "language": ["EN", "ES"],
+      "word_count": 78000,
+      "platforms": ["Apple Books"],
+      "hook_en": "He writes obituaries for the living... until they start dying.",
+      "hook_es": "Escribe obituarios para los vivos... hasta que empiezan a morir.",
+      "keywords": ["thriller", "gothic", "mystery", "suspense"],
+      "target_audience": "Gothic mystery fans, thriller readers"
+    },
+    {
+      "id": "forgotten_tomb",
+      "title": "The Forgotten Tomb",
+      "title_es": "La tumba olvidada",
+      "year": 2025,
+      "genre": "Archaeological Thriller",
+      "language": ["EN", "ES"],
+      "word_count": 82000,
+      "platforms": ["Apple Books"],
+      "hook_en": "An ancient tomb. A deadly secret. A race against time.",
+      "hook_es": "Una tumba antigua. Un secreto mortal. Una carrera contra el tiempo.",
+      "keywords": ["archaeology", "thriller", "adventure", "ancient", "mystery"],
+      "target_audience": "Adventure thriller fans, history enthusiasts"
+    },
+    {
+      "id": "eco_fuel",
+      "title": "Eco-fuel-FA (ECOFA): A viable solution",
+      "title_es": "Eco-fuel-FA (ECOFA): Una solución viable",
+      "year": 2010,
+      "genre": "Sustainability",
+      "language": ["EN", "ES"],
+      "word_count": 35000,
+      "platforms": ["Lulu"],
+      "hook_en": "Is there really a sustainable alternative to fossil fuels?",
+      "hook_es": "¿Existe realmente una alternativa sostenible a los combustibles fósiles?",
+      "keywords": ["sustainability", "energy", "environment", "biofuel", "eco"],
+      "target_audience": "Environmentalists, science readers, policy makers"
+    },
+    {
+      "id": "freak",
+      "title": "Freak",
+      "title_es": "Freak",
+      "year": 2023,
+      "genre": "Psychological Sci-Fi",
+      "language": ["EN", "ES"],
+      "platforms": ["Amazon", "Walmart"],
+      "hook_en": "What makes someone a freak? Society's judgment or their own nature?",
+      "hook_es": "¿Qué hace a alguien un freak? ¿El juicio de la sociedad o su propia naturaleza?",
+      "keywords": ["psychological", "sci-fi", "different", "society"],
+      "target_audience": "Psychological fiction readers"
+    },
+    {
+      "id": "lazarus_project",
+      "title": "Lazarus Project",
+      "title_es": "Proyecto Lázaro",
+      "year": 2023,
+      "genre": "Tech Thriller",
+      "language": ["EN", "ES"],
+      "platforms": ["Apple Books"],
+      "hook_en": "Bringing the dead back to life was just the beginning.",
+      "hook_es": "Traer a los muertos de vuelta a la vida era solo el principio.",
+      "keywords": ["thriller", "technology", "resurrection", "science"],
+      "target_audience": "Tech thriller fans"
+    },
+    {
+      "id": "summer_1989",
+      "title": "Summer of 1989",
+      "title_es": "Verano de 1989",
+      "year": 2024,
+      "genre": "Historical Drama",
+      "language": ["EN", "ES"],
+      "hook_en": "The Cold War was ending. Our summer was just beginning.",
+      "hook_es": "La Guerra Fría terminaba. Nuestro verano apenas comenzaba.",
+      "keywords": ["historical", "cold war", "1989", "drama", "coming of age"],
+      "target_audience": "Historical fiction readers"
+    },
+    {
+      "id": "kira_ice_storm",
+      "title": "Kira and the Ice Storm",
+      "title_es": "Kira y la tormenta de hielo",
+      "year": 2009,
+      "genre": "Science Fiction",
+      "language": ["EN"],
+      "platforms": ["Apple Books"],
+      "hook_en": "A world frozen. A girl with powers. A fight for survival.",
+      "keywords": ["science fiction", "apocalyptic", "young adult"],
+      "target_audience": "YA sci-fi readers"
+    },
+    {
+      "id": "reliquia",
+      "title": "The Relic",
+      "title_es": "La Reliquia",
+      "year": 2006,
+      "genre": "Science Fiction",
+      "language": ["ES"],
+      "platforms": ["Apple Books"],
+      "hook_es": "Una reliquia antigua con poderes más allá de la comprensión.",
+      "keywords": ["science fiction", "satirical"],
+      "target_audience": "Sci-fi readers"
+    },
+    {
+      "id": "shanghai_3",
+      "title": "Shanghai 3",
+      "title_es": "Shanghai 3",
+      "year": 2015,
+      "genre": "Cyberpunk",
+      "language": ["ES"],
+      "hook_es": "En el Shanghai del futuro, la realidad es solo una ilusión más.",
+      "keywords": ["cyberpunk", "dystopia", "future"],
+      "target_audience": "Cyberpunk fans"
+    },
+    {
+      "id": "codigo_caos",
+      "title": "The Chaos Code",
+      "title_es": "El Código del Caos",
+      "year": 2016,
+      "genre": "Tech Thriller",
+      "language": ["ES", "PT"],
+      "hook_es": "Un código que puede cambiar el mundo... o destruirlo.",
+      "keywords": ["thriller", "technology", "hacking"],
+      "target_audience": "Tech thriller readers"
+    },
+    {
+      "id": "star_wind",
+      "title": "Star Wind: The Pyramid of Destiny",
+      "title_es": "Star Wind: La pirámide del destino",
+      "year": 2017,
+      "genre": "Space Opera",
+      "language": ["EN", "ES"],
+      "platforms": ["Barnes & Noble"],
+      "hook_en": "Among the stars, destiny awaits in an ancient pyramid.",
+      "keywords": ["space opera", "epic", "adventure"],
+      "target_audience": "Space opera fans"
+    },
+    {
+      "id": "company_12",
+      "title": "Company Nº12",
+      "title_es": "Compañía Nº12",
+      "year": 2018,
+      "genre": "Military Thriller",
+      "language": ["ES", "FR"],
+      "hook_es": "Una compañía. Una misión. Supervivencia.",
+      "keywords": ["military", "thriller", "action"],
+      "target_audience": "Military fiction readers"
+    },
+    {
+      "id": "quantum_experiment",
+      "title": "The Quantum Experiment",
+      "title_es": "El experimento cuántico",
+      "year": 2025,
+      "genre": "Scientific Thriller",
+      "language": ["ES"],
+      "hook_es": "Un experimento que desafía las leyes de la física.",
+      "keywords": ["quantum", "thriller", "science", "paradox"],
+      "target_audience": "Science thriller readers"
+    },
+    {
+      "id": "vampiro_metropolitan",
+      "title": "The Vampire of the Metropolitan",
+      "title_es": "El vampiro del Metropolitan",
+      "year": 2025,
+      "genre": "Urban Horror",
+      "language": ["ES"],
+      "hook_es": "En el corazón de la ciudad, un terror antiguo despierta.",
+      "keywords": ["vampire", "horror", "urban", "terror"],
+      "target_audience": "Horror fans"
+    }
+  ],
+  "distribution": {
+    "platforms": {
+      "amazon_kdp": {
+        "enabled": true,
+        "priority": 1,
+        "marketplaces": ["US", "UK", "ES", "MX", "DE", "FR", "IT", "JP", "BR", "AU", "CA", "IN"],
+        "author_page": "https://www.amazon.com/stores/author/B0086LDX3G"
+      },
+      "apple_books": {
+        "enabled": true,
+        "priority": 2,
+        "url": "https://books.apple.com/us/author/francisco-angulo-de-lafuente/id1329061763"
+      },
+      "google_play": {
+        "enabled": true,
+        "priority": 3
+      },
+      "kobo": {
+        "enabled": true,
+        "priority": 4
+      },
+      "barnes_noble": {
+        "enabled": true,
+        "priority": 5
+      }
+    },
+    "library_platforms": {
+      "overdrive": {"enabled": true, "distributors": ["Draft2Digital", "PublishDrive", "StreetLib", "IngramSpark"]},
+      "hoopla": {"enabled": true, "distributors": ["Draft2Digital", "PublishDrive", "IngramSpark"]},
+      "cloudlibrary": {"enabled": true, "distributors": ["Draft2Digital"]},
+      "odilo": {"enabled": true, "distributors": ["Draft2Digital", "StreetLib", "IngramSpark"]},
+      "ebscohost": {"enabled": true, "distributors": ["IngramSpark"]},
+      "mackin": {"enabled": true, "distributors": ["PublishDrive", "IngramSpark"]}
+    }
+  },
+  "marketing": {
+    "posting_schedule": {
+      "twitter": {"frequency": "3-5 daily", "times": ["09:00", "13:00", "18:00"]},
+      "instagram": {"frequency": "1 post + 3 stories daily"},
+      "facebook": {"frequency": "1 daily"},
+      "linkedin": {"frequency": "2 weekly"},
+      "tiktok": {"frequency": "2-3 weekly"}
+    },
+    "hashtag_strategy": {
+      "EN": ["#BookRecommendations", "#IndieAuthor", "#KindleUnlimited", "#BookTok", "#SciFi", "#Thriller"],
+      "ES": ["#LibrosRecomendados", "#EscritorEspañol", "#KindleUnlimited", "#BookTokEspañol", "#CienciaFicción"]
+    },
+    "goals_2026": {
+      "total_sales": 10000,
+      "revenue_usd": 50000,
+      "new_reviews": 200,
+      "email_subscribers": 2000,
+      "social_followers": 15000,
+      "libraries_contacted": 500
+    }
+  }
+}
