@@ -1,49 +1,117 @@
 name: Autonomous Literary Agent 24/7 Operation
 
 on:
-    schedule:
-        - cron: "0 */6 * * *"
-    workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *" # Every 6 hours
+  workflow_dispatch: # Manual trigger
 
 env:
-    PYTHON_VERSION: "3.11"
+  PYTHON_VERSION: "3.11"
 
 jobs:
-    run-agent:
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
+  run-agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
-                  cache: "pip"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-            - name: Create directories
-              run: mkdir -p memory logs library_data submission_data config
+      - name: Create directories
+        run: mkdir -p memory logs library_data submission_data config
 
-            - name: Run agent tasks
-              env:
-                  GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
-                  GROQ_API_KEY_1: ${{ secrets.GROQ_API_KEY_1 }}
-              run: |
-                  python main.py &
-                  sleep 300
-                  echo "Agent cycle completed"
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          # Z.ai API Keys
+          ZAI_API_KEY_1=${{ secrets.ZAI_API_KEY_1 }}
+          ZAI_API_KEY_2=${{ secrets.ZAI_API_KEY_2 }}
+          ZAI_API_KEY_3=${{ secrets.ZAI_API_KEY_3 }}
+          ZAI_API_KEY_4=${{ secrets.ZAI_API_KEY_4 }}
+          ZAI_API_KEY_5=${{ secrets.ZAI_API_KEY_5 }}
+          ZAI_API_KEY_6=${{ secrets.ZAI_API_KEY_6 }}
 
-            - name: Upload artifacts
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: agent-logs
-                  path: logs/
-                  retention-days: 7
+          # Gemini API Keys
+          GEMINI_API_KEY_1=${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2=${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3=${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4=${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5=${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_6=${{ secrets.GEMINI_API_KEY_6 }}
+
+          # Groq API Keys
+          GROQ_API_KEY_1=${{ secrets.GROQ_API_KEY_1 }}
+          GROQ_API_KEY_2=${{ secrets.GROQ_API_KEY_2 }}
+          GROQ_API_KEY_3=${{ secrets.GROQ_API_KEY_3 }}
+          GROQ_API_KEY_4=${{ secrets.GROQ_API_KEY_4 }}
+          GROQ_API_KEY_5=${{ secrets.GROQ_API_KEY_5 }}
+
+          # NVIDIA API Keys
+          NVIDIA_API_KEY_1=${{ secrets.NVIDIA_API_KEY_1 }}
+          NVIDIA_API_KEY_2=${{ secrets.NVIDIA_API_KEY_2 }}
+
+          # HuggingFace API Keys
+          HUGGINGFACE_API_KEY_1=${{ secrets.HUGGINGFACE_API_KEY_1 }}
+          HUGGINGFACE_API_KEY_2=${{ secrets.HUGGINGFACE_API_KEY_2 }}
+          HUGGINGFACE_API_KEY_3=${{ secrets.HUGGINGFACE_API_KEY_3 }}
+          HUGGINGFACE_API_KEY_4=${{ secrets.HUGGINGFACE_API_KEY_4 }}
+
+          # Search APIs
+          BRAVE_API_KEY=${{ secrets.BRAVE_API_KEY }}
+
+          # Social Media
+          REDDIT_USERNAME=${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD=${{ secrets.REDDIT_PASSWORD }}
+          MOLTBOOK_API_KEY=${{ secrets.MOLTBOOK_API_KEY }}
+
+          # Email
+          SMTP_HOST=${{ secrets.SMTP_HOST }}
+          SMTP_PORT=${{ secrets.SMTP_PORT }}
+          SMTP_USER=${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM=${{ secrets.EMAIL_FROM }}
+
+          # Kaggle
+          KAGGLE_USERNAME=${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY=${{ secrets.KAGGLE_KEY }}
+
+          # Agent Configuration
+          AUTHOR_NAME=${{ secrets.AUTHOR_NAME }}
+          AUTHOR_EMAIL=${{ secrets.AUTHOR_EMAIL }}
+          AGENT_NAME=${{ secrets.AGENT_NAME }}
+          EOF
+
+      - name: Run agent tasks
+        run: |
+          python main.py &
+          AGENT_PID=$!
+          sleep 300
+          kill $AGENT_PID 2>/dev/null || true
+          echo "Agent cycle completed"
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-logs
+          path: logs/
+          retention-days: 7
+
+      - name: Upload memory state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-memory
+          path: memory/
+          retention-days: 7
