@@ -1,93 +1,39 @@
 # Autonomous Literary Agent - Python Dependencies
 # Core dependencies for the 24/7 literary agent system
 
-# ===========================================
 # Core Runtime
-# ===========================================
 python-dotenv>=1.0.0
 aiohttp>=3.9.0
-asyncio>=3.4.3
 
-# ===========================================
 # LLM API Clients
-# ===========================================
 openai>=1.0.0
 google-generativeai>=0.3.0
 requests>=2.31.0
 
-# ===========================================
 # Social Media APIs
-# ===========================================
 tweepy>=4.14.0
 praw>=7.7.0
-linkedin-api>=2.0.0
 
-# ===========================================
-# Email and Communication
-# ===========================================
+# Email
 aiosmtplib>=3.0.0
 email-validator>=2.1.0
 
-# ===========================================
 # Data Processing
-# ===========================================
 pandas>=2.0.0
-openpyxl>=3.1.0
 beautifulsoup4>=4.12.0
-lxml>=4.9.0
 
-# ===========================================
-# Storage and Persistence
-# ===========================================
-fs>=2.4.16
+# Storage
 jsonschema>=4.20.0
 
-# ===========================================
-# Scheduling and Task Management
-# ===========================================
-apscheduler>=3.10.0
+# Scheduling
 schedule>=1.2.0
 
-# ===========================================
-# Search and Research
-# ===========================================
-brave-search>=0.1.0
-
-# ===========================================
-# Logging and Monitoring
-# ===========================================
+# Logging
 loguru>=0.7.0
 rich>=13.7.0
 
-# ===========================================
 # Utilities
-# ===========================================
 python-dateutil>=2.8.0
 pytz>=2023.3
 tenacity>=8.2.0
 httpx>=0.25.0
-
-# ===========================================
-# Optional: Advanced Features
-# ===========================================
-# For PDF generation
-reportlab>=4.0.0
-
-# For image processing
-Pillow>=10.0.0
-
-# For web scraping (use responsibly)
-selenium>=4.15.0
-playwright>=1.40.0
-
-# For content generation
-markdown>=3.5.0
-
-# ===========================================
-# Development Dependencies
-# ===========================================
-pytest>=7.4.0
-pytest-asyncio>=0.21.0
-black>=23.0.0
-flake8>=6.1.0
-mypy>=1.7.0
