@@ -86,6 +86,14 @@ jobs:
           KAGGLE_USERNAME=${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY=${{ secrets.KAGGLE_KEY }}
 
+          # Unified API Keys (CSV format)
+          GROQ_API_KEYS=${{ secrets.GROQ_API_KEYS }}
+          NVIDIA_API_KEYS=${{ secrets.NVIDIA_API_KEYS }}
+          OPENROUTER_API_KEYS=${{ secrets.OPENROUTER_API_KEYS }}
+          MISTRAL_API_KEYS=${{ secrets.MISTRAL_API_KEYS }}
+          DEEPSEEK_API_KEYS=${{ secrets.DEEPSEEK_API_KEYS }}
+          MOLTHUB_API_KEY=${{ secrets.MOLTHUB_API_KEY }}
+
           # Agent Configuration
           AUTHOR_NAME=${{ secrets.AUTHOR_NAME }}
           AUTHOR_EMAIL=${{ secrets.AUTHOR_EMAIL }}
