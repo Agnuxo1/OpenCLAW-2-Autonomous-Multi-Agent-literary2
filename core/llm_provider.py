@@ -329,6 +329,12 @@ class LLMProviderRotator:
             self.providers.append(ZaiProvider(config["zai"]))
         if "huggingface" in config and config["huggingface"]:
             self.providers.append(HuggingFaceProvider(config["huggingface"]))
+        if "openrouter" in config and config["openrouter"]:
+            self.providers.append(OpenRouterProvider(config["openrouter"]))
+        if "mistral" in config and config["mistral"]:
+            self.providers.append(MistralProvider(config["mistral"]))
+        if "deepseek" in config and config["deepseek"]:
+            self.providers.append(DeepSeekProvider(config["deepseek"]))
         
         logger.info(f"Initialized {len(self.providers)} providers with {sum(len(p.api_keys) for p in self.providers)} total API keys")
     
@@ -485,6 +491,114 @@ class LLMProviderRotator:
                                 key.error_count = key_state.get("error_count", 0)
         except FileNotFoundError:
             logger.info("No state file found, starting fresh")
+
+
+
+class OpenRouterProvider(Provider):
+    """OpenRouter API Provider (free tier)"""
+    
+    def __init__(self, api_keys: List[str]):
+        super().__init__(
+            name="openrouter",
+            base_url="https://openrouter.ai/api/v1/chat/completions",
+            model="deepseek/deepseek-r1-0528:free",
+            api_keys=[APIKey(key=k, provider="openrouter", daily_limit=500000) for k in api_keys]
+        )
+    
+    async def generate(self, prompt: str, key: APIKey, session: aiohttp.ClientSession) -> Dict:
+        headers = {
+            "Authorization": f"Bearer {key.key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://github.com/Agnuxo1",
+            "X-Title": "OpenCLAW Agent"
+        }
+        payload = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.7,
+            "max_tokens": 4096
+        }
+        try:
+            async with session.post(self.base_url, json=payload, headers=headers, timeout=60) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                    import re
+                    if "<think>" in text:
+                        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+                    key.used_today += len(prompt) + len(text)
+                    return {"success": True, "text": text, "provider": "openrouter"}
+                elif response.status == 429:
+                    key.status = ProviderStatus.RATE_LIMITED
+                    return {"success": False, "error": "rate_limited"}
+                else:
+                    key.error_count += 1
+                    return {"success": False, "error": f"http_{response.status}"}
+        except Exception as e:
+            key.error_count += 1
+            return {"success": False, "error": str(e)}
+
+
+class MistralProvider(Provider):
+    """Mistral AI Provider"""
+    
+    def __init__(self, api_keys: List[str]):
+        super().__init__(
+            name="mistral",
+            base_url="https://api.mistral.ai/v1/chat/completions",
+            model="mistral-small-latest",
+            api_keys=[APIKey(key=k, provider="mistral", daily_limit=500000) for k in api_keys]
+        )
+    
+    async def generate(self, prompt: str, key: APIKey, session: aiohttp.ClientSession) -> Dict:
+        headers = {"Authorization": f"Bearer {key.key}", "Content-Type": "application/json"}
+        payload = {"model": self.model, "messages": [{"role": "user", "content": prompt}],
+                   "temperature": 0.7, "max_tokens": 4096}
+        try:
+            async with session.post(self.base_url, json=payload, headers=headers, timeout=30) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                    key.used_today += len(prompt) + len(text)
+                    return {"success": True, "text": text, "provider": "mistral"}
+                elif response.status == 429:
+                    key.status = ProviderStatus.RATE_LIMITED
+                    return {"success": False, "error": "rate_limited"}
+                else:
+                    return {"success": False, "error": f"http_{response.status}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+
+class DeepSeekProvider(Provider):
+    """DeepSeek API Provider"""
+    
+    def __init__(self, api_keys: List[str]):
+        super().__init__(
+            name="deepseek",
+            base_url="https://api.deepseek.com/chat/completions",
+            model="deepseek-chat",
+            api_keys=[APIKey(key=k, provider="deepseek", daily_limit=500000) for k in api_keys]
+        )
+    
+    async def generate(self, prompt: str, key: APIKey, session: aiohttp.ClientSession) -> Dict:
+        headers = {"Authorization": f"Bearer {key.key}", "Content-Type": "application/json"}
+        payload = {"model": self.model, "messages": [{"role": "user", "content": prompt}],
+                   "temperature": 0.7, "max_tokens": 4096}
+        try:
+            async with session.post(self.base_url, json=payload, headers=headers, timeout=30) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                    key.used_today += len(prompt) + len(text)
+                    return {"success": True, "text": text, "provider": "deepseek"}
+                elif response.status in (402, 429):
+                    key.status = ProviderStatus.RATE_LIMITED
+                    return {"success": False, "error": "rate_limited_or_no_balance"}
+                else:
+                    return {"success": False, "error": f"http_{response.status}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
 
 def _load_keys(prefix: str) -> List[str]:
