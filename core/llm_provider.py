@@ -487,55 +487,42 @@ class LLMProviderRotator:
             logger.info("No state file found, starting fresh")
 
 
+def _load_keys(prefix: str) -> List[str]:
+    """Load API keys from both CSV format (PREFIX_API_KEYS) and numbered format (PREFIX_API_KEY_1)."""
+    keys = []
+    # CSV format (unified): GROQ_API_KEYS="key1,key2,key3"
+    csv_val = os.getenv(f"{prefix}_API_KEYS", "")
+    if csv_val:
+        keys.extend([k.strip() for k in csv_val.split(",") if k.strip()])
+    # Numbered format (legacy): GROQ_API_KEY_1, GROQ_API_KEY_2...
+    for i in range(1, 10):
+        key = os.getenv(f"{prefix}_API_KEY_{i}")
+        if key and key not in keys:
+            keys.append(key)
+    # Single key format: GROQ_API_KEY
+    single = os.getenv(f"{prefix}_API_KEY")
+    if single and single not in keys:
+        keys.append(single)
+    return keys
+
+
 def load_api_keys_from_env() -> Dict[str, List[str]]:
-    """Load API keys from environment variables"""
+    """Load API keys from environment variables (supports CSV, numbered, and single formats)."""
     config = {}
-    
-    # Gemini keys
-    gemini_keys = []
-    for i in range(1, 10):
-        key = os.getenv(f"GEMINI_API_KEY_{i}")
-        if key:
-            gemini_keys.append(key)
-    if gemini_keys:
-        config["gemini"] = gemini_keys
-    
-    # Groq keys
-    groq_keys = []
-    for i in range(1, 10):
-        key = os.getenv(f"GROQ_API_KEY_{i}")
-        if key:
-            groq_keys.append(key)
-    if groq_keys:
-        config["groq"] = groq_keys
-    
-    # NVIDIA keys
-    nvidia_keys = []
-    for i in range(1, 10):
-        key = os.getenv(f"NVIDIA_API_KEY_{i}")
-        if key:
-            nvidia_keys.append(key)
-    if nvidia_keys:
-        config["nvidia"] = nvidia_keys
-    
-    # Z.ai keys
-    zai_keys = []
-    for i in range(1, 10):
-        key = os.getenv(f"ZAI_API_KEY_{i}")
-        if key:
-            zai_keys.append(key)
-    if zai_keys:
-        config["zai"] = zai_keys
-    
-    # HuggingFace keys
-    hf_keys = []
-    for i in range(1, 10):
-        key = os.getenv(f"HUGGINGFACE_API_KEY_{i}")
-        if key:
-            hf_keys.append(key)
-    if hf_keys:
-        config["huggingface"] = hf_keys
-    
+    for provider, prefix in [
+        ("groq", "GROQ"),
+        ("nvidia", "NVIDIA"),
+        ("openrouter", "OPENROUTER"),
+        ("mistral", "MISTRAL"),
+        ("deepseek", "DEEPSEEK"),
+        ("gemini", "GEMINI"),
+        ("zai", "ZAI"),
+        ("huggingface", "HUGGINGFACE"),
+    ]:
+        keys = _load_keys(prefix)
+        if keys:
+            config[provider] = keys
+            logger.info(f"  Loaded {len(keys)} {provider} key(s)")
     return config
 
 
