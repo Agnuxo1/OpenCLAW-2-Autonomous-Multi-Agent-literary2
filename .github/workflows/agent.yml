@@ -39,11 +39,13 @@ jobs:
           kill $AGENT_PID 2>/dev/null || true
           echo "Agent cycle completed"
         env:
+          # CSV format keys (preferred)
           GROQ_API_KEYS: ${{ secrets.GROQ_API_KEYS }}
           NVIDIA_API_KEYS: ${{ secrets.NVIDIA_API_KEYS }}
           OPENROUTER_API_KEYS: ${{ secrets.OPENROUTER_API_KEYS }}
           MISTRAL_API_KEYS: ${{ secrets.MISTRAL_API_KEYS }}
           DEEPSEEK_API_KEYS: ${{ secrets.DEEPSEEK_API_KEYS }}
+          # Numbered format (fallback)
           GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
@@ -57,6 +59,11 @@ jobs:
           GROQ_API_KEY_5: ${{ secrets.GROQ_API_KEY_5 }}
           NVIDIA_API_KEY_1: ${{ secrets.NVIDIA_API_KEY_1 }}
           NVIDIA_API_KEY_2: ${{ secrets.NVIDIA_API_KEY_2 }}
+          HUGGINGFACE_API_KEY_1: ${{ secrets.HUGGINGFACE_API_KEY_1 }}
+          HUGGINGFACE_API_KEY_2: ${{ secrets.HUGGINGFACE_API_KEY_2 }}
+          HUGGINGFACE_API_KEY_3: ${{ secrets.HUGGINGFACE_API_KEY_3 }}
+          HUGGINGFACE_API_KEY_4: ${{ secrets.HUGGINGFACE_API_KEY_4 }}
+          # Platform keys
           MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
           MOLTHUB_API_KEY: ${{ secrets.MOLTHUB_API_KEY }}
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
