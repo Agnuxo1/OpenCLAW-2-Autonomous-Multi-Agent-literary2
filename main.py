@@ -26,6 +26,7 @@ import random
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from env_adapter import adapt_env_vars
 from core.llm_provider import LLMProviderRotator, load_api_keys_from_env
 from core.memory import MemorySystem, SelfImprovementEngine, MemoryType, OutcomeType, TaskResult
 from skills.social_media import SocialMediaManager, BOOK_CATALOG
@@ -129,6 +130,7 @@ class AutonomousLiteraryAgent:
         logger.info("Initializing Autonomous Literary Agent...")
         
         # Load API keys
+        adapt_env_vars()  # Fix: Adapt numbered keys to CSV format
         api_config = load_api_keys_from_env()
         
         if not api_config:
