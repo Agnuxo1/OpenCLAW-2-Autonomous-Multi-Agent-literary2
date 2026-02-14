@@ -110,6 +110,10 @@ def write_github_env(consolidated: Dict[str, str]):
             print(f"export {var}=\"{val}\"")
 
 
+# Alias for easier import in main scripts
+adapt_env_vars = consolidate
+
+
 if __name__ == '__main__':
     result = consolidate()
     
