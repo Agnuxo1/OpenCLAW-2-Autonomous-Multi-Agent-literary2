@@ -1,0 +1,43 @@
+{
+  "memories": {
+    "ae0e4ec86b2c": {
+      "id": "ae0e4ec86b2c",
+      "type": "semantic",
+      "timestamp": "2026-02-14T14:23:23.923811",
+      "content": "ApocalypsAI is a novel about the day after AGI.",
+      "metadata": {},
+      "tags": [
+        "novel",
+        "agi"
+      ],
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-02-14T14:23:23.923824",
+      "outcome": null,
+      "lessons_learned": []
+    },
+    "49df8edf5ac5": {
+      "id": "49df8edf5ac5",
+      "type": "episodic",
+      "timestamp": "2026-02-14T14:23:24.343735",
+      "content": "Social media posts on Tuesday evenings get 20% more engagement.",
+      "metadata": {},
+      "tags": [
+        "social_media",
+        "engagement"
+      ],
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-02-14T14:23:24.343745",
+      "outcome": null,
+      "lessons_learned": []
+    }
+  },
+  "stats": {
+    "total_memories": 2,
+    "successful_tasks": 0,
+    "failed_tasks": 0,
+    "strategies_improved": 0,
+    "lessons_learned": 0
+  }
+}

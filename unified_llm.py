@@ -26,7 +26,7 @@ import urllib.request
 import urllib.error
 from typing import Optional, List, Dict, Tuple
 
-logging.basicConfig(level=logging.INFO, format='[llm] %(message)s')
+logging.basicConfig(level=logging.INFO, format='[openclaw-llm] %(message)s')
 logger = logging.getLogger(__name__)
 
 

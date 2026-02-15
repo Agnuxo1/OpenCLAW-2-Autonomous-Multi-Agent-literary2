@@ -2,6 +2,7 @@
 """
 Autonomous Literary Agent Memory System
 Persistent memory with self-improvement and learning capabilities.
+Enhanced with ChromaDB for true semantic search.
 """
 
 import os
@@ -9,12 +10,12 @@ import json
 import hashlib
 import asyncio
 from datetime import datetime, timedelta
-from typing import Optional, Dict, List, Any, Tuple
+from typing import Optional, Dict, List, Any, Tuple, Union
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 import logging
 from collections import defaultdict
-import aiohttp
+import chromadb
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -127,10 +128,47 @@ class TaskResult:
         }
 
 
+class VectorMemory:
+    """Wrapper for ChromaDB vector operations"""
+    def __init__(self, storage_path: str):
+        self.client = chromadb.PersistentClient(path=os.path.join(storage_path, "chroma"))
+        self.collection = self.client.get_or_create_collection(name="openclaw_memory")
+
+    def add(self, content: str, memory_id: str, metadata: Dict = None):
+        """Add document to vector store"""
+        # Ensure metadata values are strings or numbers for ChromaDB
+        clean_metadata = {}
+        if metadata:
+            for k, v in metadata.items():
+                if isinstance(v, (str, int, float, bool)):
+                    clean_metadata[k] = v
+                else:
+                    clean_metadata[k] = str(v)
+
+        self.collection.add(
+            documents=[content],
+            ids=[memory_id],
+            metadatas=[clean_metadata]
+        )
+
+    def search(self, query: str, limit: int = 5) -> List[str]:
+        """Search for similar documents and return IDs"""
+        results = self.collection.query(
+            query_texts=[query],
+            n_results=limit
+        )
+        return results["ids"][0] if results["ids"] else []
+
+    def delete(self, memory_id: str):
+        """Remove document from vector store"""
+        self.collection.delete(ids=[memory_id])
+
+
 class MemorySystem:
     """
     Comprehensive memory system for the autonomous literary agent.
     Implements episodic, semantic, procedural, and strategic memory.
+    Enhanced with ChromaDB for true semantic search.
     """
     
     def __init__(self, storage_path: str = "./memory"):
@@ -141,10 +179,13 @@ class MemorySystem:
         self.knowledge_base: Dict[str, Any] = {}
         self.skill_registry: Dict[str, Dict] = {}
         
+        # Vector memory layer
+        self.vector_store = VectorMemory(storage_path)
+        
         # Indices for fast retrieval
         self.tag_index: Dict[str, List[str]] = defaultdict(list)
         self.type_index: Dict[MemoryType, List[str]] = defaultdict(list)
-        self.time_index: Dict[str, List[str]] = defaultdict(list)  # Date -> IDs
+        self.time_index: Dict[str, List[str]] = defaultdict(list)
         
         # Learning parameters
         self.learning_rate = 0.1
@@ -172,7 +213,7 @@ class MemorySystem:
     def store(self, content: str, memory_type: MemoryType, 
               metadata: Dict = None, tags: List[str] = None,
               importance: float = 0.5) -> str:
-        """Store a new memory entry"""
+        """Store a new memory entry and index it in the vector store"""
         memory_id = self._generate_id(content)
         
         entry = MemoryEntry(
@@ -187,7 +228,12 @@ class MemorySystem:
         
         self.memories[memory_id] = entry
         
-        # Update indices
+        # Index in ChromaDB
+        meta_to_store = metadata or {}
+        meta_to_store["type"] = memory_type.value
+        self.vector_store.add(content, memory_id, meta_to_store)
+        
+        # Update classic indices
         for tag in entry.tags:
             self.tag_index[tag].append(memory_id)
         self.type_index[memory_type].append(memory_id)
@@ -235,18 +281,13 @@ class MemorySystem:
         return [self.memories[mid] for mid in ids if mid in self.memories]
     
     def search_semantic(self, query: str, limit: int = 10) -> List[MemoryEntry]:
-        """Simple semantic search (keyword-based)"""
-        query_words = set(query.lower().split())
-        scored_memories = []
-        
-        for entry in self.memories.values():
-            content_words = set(entry.content.lower().split())
-            score = len(query_words & content_words)
-            if score > 0:
-                scored_memories.append((score, entry))
-        
-        scored_memories.sort(key=lambda x: x[0], reverse=True)
-        return [entry for _, entry in scored_memories[:limit]]
+        """True vector-based semantic search using ChromaDB"""
+        matching_ids = self.vector_store.search(query, limit)
+        results = []
+        for mid in matching_ids:
+            if mid in self.memories:
+                results.append(self.memories[mid])
+        return results
     
     def record_task_result(self, result: TaskResult):
         """Record the result of a completed task"""
@@ -377,9 +418,11 @@ class MemorySystem:
             self._remove_memory(memory_id)
     
     def _remove_memory(self, memory_id: str):
-        """Remove a memory and update indices"""
+        """Remove a memory from disk, indices, and vector store"""
         if memory_id not in self.memories:
             return
+        
+        self.vector_store.delete(memory_id)
         
         entry = self.memories[memory_id]
         
@@ -489,197 +532,3 @@ class MemorySystem:
                 reverse=True
             )[:10]
         }
-
-
-class SelfImprovementEngine:
-    """
-    Self-improvement engine that analyzes past performance
-    and generates improvement strategies.
-    """
-    
-    def __init__(self, memory: MemorySystem, llm_provider):
-        self.memory = memory
-        self.llm_provider = llm_provider
-        self.improvement_history: List[Dict] = []
-    
-    async def analyze_performance(self) -> Dict:
-        """Analyze overall performance and identify areas for improvement"""
-        summary = self.memory.get_summary()
-        failure_analysis = self.memory.get_failure_analysis()
-        successful_patterns = self.memory.get_successful_patterns()
-        
-        analysis = {
-            "timestamp": datetime.now().isoformat(),
-            "performance_metrics": {
-                "success_rate": summary["stats"]["successful_tasks"] / max(1, summary["stats"]["successful_tasks"] + summary["stats"]["failed_tasks"]),
-                "total_tasks": summary["stats"]["successful_tasks"] + summary["stats"]["failed_tasks"],
-                "lessons_learned": summary["stats"]["lessons_learned"]
-            },
-            "failure_analysis": failure_analysis,
-            "successful_patterns_count": len(successful_patterns),
-            "improvement_areas": []
-        }
-        
-        # Identify improvement areas
-        if failure_analysis["total_failures"] > 5:
-            analysis["improvement_areas"].append({
-                "area": "error_reduction",
-                "priority": "high",
-                "details": failure_analysis["common_errors"]
-            })
-        
-        if summary["stats"]["lessons_learned"] < 10:
-            analysis["improvement_areas"].append({
-                "area": "learning",
-                "priority": "medium",
-                "details": "Need to extract more lessons from experiences"
-            })
-        
-        return analysis
-    
-    async def generate_improvement_strategy(self, area: str, details: Dict) -> str:
-        """Generate an improvement strategy for a specific area"""
-        prompt = f"""As an AI literary agent, I need to improve in the following area:
-
-Area: {area}
-Details: {json.dumps(details, indent=2)}
-
-Recent lessons learned:
-{chr(10).join(self.memory.get_recent_lessons(5))}
-
-Generate a specific, actionable improvement strategy that I can implement.
-Focus on concrete steps and measurable outcomes.
-"""
-        
-        result = await self.llm_provider.generate(prompt)
-        
-        if result["success"]:
-            strategy_id = self.memory.create_strategy(
-                strategy=result["text"],
-                rationale=f"Improvement for {area}",
-                expected_outcome=f"Reduced errors in {area}"
-            )
-            return strategy_id
-        
-        return None
-    
-    async def reflect_on_task(self, task_result: TaskResult) -> List[str]:
-        """Reflect on a completed task and extract lessons"""
-        prompt = f"""Reflect on this completed task and extract lessons learned:
-
-Task Type: {task_result.task_type}
-Outcome: {task_result.outcome.value}
-Details: {json.dumps(task_result.details, indent=2)}
-Errors: {task_result.errors}
-
-What lessons can be learned from this task?
-What could be done differently next time?
-Provide 2-3 specific, actionable lessons.
-"""
-        
-        result = await self.llm_provider.generate(prompt)
-        
-        lessons = []
-        if result["success"]:
-            # Parse lessons from response
-            lines = result["text"].strip().split('\n')
-            for line in lines:
-                line = line.strip()
-                if line and (line.startswith('-') or line.startswith('•') or line.startswith('*')):
-                    lesson = line.lstrip('-•* ').strip()
-                    if lesson:
-                        lessons.append(lesson)
-        
-        return lessons
-    
-    async def run_improvement_cycle(self) -> Dict:
-        """Run a complete self-improvement cycle"""
-        logger.info("Starting self-improvement cycle...")
-        
-        # 1. Analyze performance
-        analysis = await self.analyze_performance()
-        
-        # 2. Generate strategies for improvement areas
-        strategies_created = []
-        for area in analysis["improvement_areas"]:
-            strategy_id = await self.generate_improvement_strategy(
-                area["area"], 
-                area["details"]
-            )
-            if strategy_id:
-                strategies_created.append(strategy_id)
-        
-        # 3. Reflect on recent failed tasks
-        lessons_extracted = []
-        recent_failures = [
-            t for t in self.memory.task_history[-10:]
-            if t.outcome == OutcomeType.FAILURE
-        ]
-        
-        for task in recent_failures[-3:]:  # Limit to 3 most recent
-            lessons = await self.reflect_on_task(task)
-            for lesson in lessons:
-                self.memory.learn_lesson(task.task_id, lesson)
-                lessons_extracted.append(lesson)
-        
-        result = {
-            "timestamp": datetime.now().isoformat(),
-            "analysis": analysis,
-            "strategies_created": strategies_created,
-            "lessons_extracted": lessons_extracted
-        }
-        
-        self.improvement_history.append(result)
-        self.memory.save_to_disk()
-        
-        logger.info(f"Improvement cycle complete. Created {len(strategies_created)} strategies, extracted {len(lessons_extracted)} lessons")
-        
-        return result
-
-
-# Example usage
-async def main():
-    """Example usage of the memory system"""
-    memory = MemorySystem("./test_memory")
-    
-    # Store some memories
-    mid1 = memory.store(
-        "Successfully posted to Twitter about ApocalypsAI novel",
-        MemoryType.EPISODIC,
-        metadata={"platform": "twitter", "book": "ApocalypsAI"},
-        tags=["social_media", "success"],
-        importance=0.7
-    )
-    
-    mid2 = memory.store(
-        "Library outreach email template works best with personalization",
-        MemoryType.SEMANTIC,
-        tags=["library", "email", "best_practice"],
-        importance=0.8
-    )
-    
-    # Record a task result
-    task = TaskResult(
-        task_id="task_001",
-        task_type="social_post",
-        started=datetime.now().isoformat(),
-        completed=datetime.now().isoformat(),
-        outcome=OutcomeType.SUCCESS,
-        details={"platform": "twitter", "engagement": 45}
-    )
-    memory.record_task_result(task)
-    
-    # Search memories
-    results = memory.search_by_tags(["social_media"])
-    print(f"Found {len(results)} memories about social media")
-    
-    # Get summary
-    print("\nMemory Summary:")
-    print(json.dumps(memory.get_summary(), indent=2))
-    
-    # Save to disk
-    memory.save_to_disk()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

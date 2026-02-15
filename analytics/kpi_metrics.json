@@ -1,0 +1,15 @@
+{
+  "sessions": [
+    {
+      "session_id": "2edee722-f4f2-4dc4-a7d0-7ca0a2c4ae4a",
+      "timestamp": "2026-02-14T14:26:06.275306",
+      "raw_result": "Twitter Post ID: 1234567890\nContent: AI surpasses human intelligence. The end of the world is just the beginning. #ApocalypsAI\nReddit Post ID: abcdefghij\nContent: Discover the consequences of emerging technologies in ApocalypsAI: The Day After AGI, a gripping science fiction novel."
+    }
+  ],
+  "aggregates": {
+    "total_posts": 1,
+    "total_opportunities_found": 0,
+    "total_reflections": 0,
+    "success_rate": 0.0
+  }
+}

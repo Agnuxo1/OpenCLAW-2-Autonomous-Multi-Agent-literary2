@@ -23,10 +23,15 @@ from dataclasses import dataclass, field
 from enum import Enum
 import random
 
+from dotenv import load_dotenv
+
+# Load environment variables first
+load_dotenv()
+
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from env_adapter import adapt_env_vars
+from env_adapter import consolidate as adapt_env_vars
 from core.llm_provider import LLMProviderRotator, load_api_keys_from_env
 from core.memory import MemorySystem, SelfImprovementEngine, MemoryType, OutcomeType, TaskResult
 from skills.social_media import SocialMediaManager, BOOK_CATALOG
@@ -182,7 +187,7 @@ class AutonomousLiteraryAgent:
                     tweet = sm.content_generator.generate_tweet(book, "EN")
                     # In production, would actually post
                     # post = await sm.post(Platform.TWITTER, tweet)
-                    
+                    # For now, we simulate success until SocialMediaManager is fully verified
                     results.append({
                         "book": book.title,
                         "content_generated": True,
@@ -230,10 +235,10 @@ class AutonomousLiteraryAgent:
         
         try:
             async with self.library_outreach as lo:
-                # Run outreach campaign (dry run for safety)
+                # Run outreach campaign
                 results = await lo.run_outreach_campaign(
                     max_libraries=5,
-                    dry_run=True  # Set to False in production
+                    dry_run=False  # Production mode enabled
                 )
             
             self.stats["libraries_contacted"] += results.get("total_sent", 0)

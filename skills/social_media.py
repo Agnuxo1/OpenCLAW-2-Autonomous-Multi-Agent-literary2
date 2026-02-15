@@ -751,6 +751,40 @@ class SocialMediaManager:
             status=PostStatus.PENDING
         )
         
+        # Check for Postiz configuration
+        if os.getenv("POSTIZ_API_KEY"):
+            from core.postiz_client import PostizClient
+            if not hasattr(self, "postiz"):
+                self.postiz = PostizClient()
+            
+            # Map platform to Postiz provider string (heuristic)
+            provider_map = {
+                Platform.TWITTER: "twitter",
+                Platform.LINKEDIN: "linkedin", 
+                Platform.REDDIT: "reddit",
+                Platform.FACEBOOK: "facebook",
+                Platform.INSTAGRAM: "instagram",
+                Platform.TIKTOK: "tiktok",
+                Platform.MASTODON: "mastodon",
+                Platform.THREADS: "threads",
+            }
+            
+            provider = provider_map.get(platform)
+            if provider:
+                logger.info(f"Delegating post to Postiz for {platform.value}")
+                result = await self.postiz.create_post(content, [provider])
+                
+                if result["success"]:
+                    post.status = PostStatus.POSTED
+                    post.posted_time = datetime.now().isoformat()
+                    post.metadata["postiz_id"] = result["data"].get("id")
+                    self.daily_post_count[platform] += 1
+                    self.post_history.append(post)
+                    return post
+                else:
+                    logger.warning(f"Postiz failed: {result.get('error')}. Falling back to direct API.")
+        
+        # Fallback to direct API
         result = {"success": False, "error": "Unknown platform"}
         
         if platform == Platform.TWITTER:
@@ -795,8 +829,10 @@ class SocialMediaManager:
         selected_books = random.sample(books, min(3, len(books)))
         
         for book in selected_books:
-            # Twitter post
+            # Generate content
             tweet = self.content_generator.generate_tweet(book, "EN")
+            
+            # Post
             post = await self.post(Platform.TWITTER, tweet)
             results["posts"].append(post.to_dict())
             
@@ -804,9 +840,8 @@ class SocialMediaManager:
                 results["success_count"] += 1
             else:
                 results["failure_count"] += 1
-            
-            await asyncio.sleep(60)  # Rate limiting
-            
+                
+
             # Reddit post
             reddit_content = self.content_generator.generate_reddit_post(book, "EN")
             post = await self.post(
@@ -821,7 +856,7 @@ class SocialMediaManager:
                 results["success_count"] += 1
             else:
                 results["failure_count"] += 1
-            
+                
             await asyncio.sleep(300)  # Reddit has stricter rate limits
         
         return results
