@@ -33,10 +33,7 @@ jobs:
 
       - name: Run agent tasks
         run: |
-          python main.py &
-          AGENT_PID=$!
-          sleep 300
-          kill $AGENT_PID 2>/dev/null || true
+          python main.py once
           echo "Agent cycle completed"
         env:
           # CSV format keys (preferred)
