@@ -15,7 +15,12 @@ from dataclasses import dataclass, field, asdict
 from enum import Enum
 import logging
 from collections import defaultdict
-import chromadb
+try:
+    import chromadb
+    HAS_CHROMADB = True
+except ImportError:
+    chromadb = None
+    HAS_CHROMADB = False
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
