@@ -2,7 +2,7 @@ name: P2P Network Node (Alive)
 
 on:
     schedule:
-        - cron: "*/10 * * * *"
+        - cron: "35 */2 * * *"
     workflow_dispatch:
 
 jobs:
@@ -20,6 +20,6 @@ jobs:
               run: npm install gun ws
 
             - name: Connect to Hive
-              run: node p2p_connect.js --name "Literary-Agent-2" --type "literary" --spec "Publishing Strategy & Networking" --duration 550
+              run: node p2p_connect.js --name "Literary-Agent-GLM5" --type "literary" --spec "GLM5 Advanced Literary Intelligence" --duration 550
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
